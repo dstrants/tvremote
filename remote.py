@@ -90,6 +90,11 @@ class Remote():
         self._connect()
         control = TvControl(self.client)
         return control.channel_up()
+    
+    def get_current_channel(self):
+        self._connect()
+        control = TvControl(self.client)
+        return control.get_current_channel()
 
     def get_apps(self, force_sync: bool = False):
         if force_sync:
