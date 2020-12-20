@@ -17,26 +17,30 @@ async def configure(tv_ip: str):
     return {"message": "Configuration done!"}
 
 
-@app.get("/mute")
-async def mute():
-    remote = Remote()
-    payload = remote.mute()
-    return {"message": "TV muted", "payload": payload}
-
-
-@app.get("/unmute")
-async def unmute():
-    remote = Remote()
-    payload = remote.mute(False)
-    return {"message": "TV muted", "payload": payload}
-
-
 @app.get("/turnoff")
 async def turnoff():
     remote = Remote()
     payload = remote.turn_off()
     return {"message": "TV closed", "payload": payload}
 
+
+# Volume Endpoints
+
+@app.get("/volume/mute")
+async def mute():
+    remote = Remote()
+    payload = remote.mute()
+    return {"message": "TV muted", "payload": payload}
+
+
+@app.get("/volume/unmute")
+async def unmute():
+    remote = Remote()
+    payload = remote.mute(False)
+    return {"message": "TV muted", "payload": payload}
+
+
+# Channel Endpoints
 
 @app.get("/channels")
 async def channels_list(sync: bool = False):
@@ -65,6 +69,8 @@ async def channels_current():
     payload = remote.get_current_channel()
     return {"message": "Channels down", "payload": payload}
 
+
+# Application Endpoints
 
 @app.get("/apps")
 async def apps_list(sync: bool = False):
