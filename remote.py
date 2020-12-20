@@ -23,8 +23,7 @@ class Remote():
         self.config = RemoteConfig(**self._configure(ip))
         self.client = WebOSClient(str(self.config.ip))
         self.channels: TinyDB = TinyDB(Path().home() / ".tvremote" / "channels.json")
-        self.apps: TinyDB = TinyDB(Path().home() / ".tvremote" / "apps.json") 
-
+        self.apps: TinyDB = TinyDB(Path().home() / ".tvremote" / "apps.json")
 
     def _connect(self, force_registration: bool = False):
         self.client.connect()
@@ -90,7 +89,7 @@ class Remote():
         self._connect()
         control = TvControl(self.client)
         return control.channel_up()
-    
+
     def get_current_channel(self):
         self._connect()
         control = TvControl(self.client)

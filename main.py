@@ -63,7 +63,8 @@ async def channels_down():
 async def channels_current():
     remote = Remote()
     payload = remote.get_current_channel()
-    return {"message": "Channels down", "payload": payload} 
+    return {"message": "Channels down", "payload": payload}
+
 
 @app.get("/apps")
 async def apps_list(sync: bool = False):
