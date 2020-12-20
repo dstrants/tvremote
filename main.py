@@ -17,25 +17,57 @@ async def configure(tv_ip: str):
     return {"message": "Configuration done!"}
 
 
-@app.get("/mute")
+@app.get("/turnoff")
+async def turnoff():
+    remote = Remote()
+    payload = remote.turn_off()
+    return {"message": "TV closed", "payload": payload}
+
+
+# Volume Endpoints
+
+@app.get("/volume/mute")
 async def mute():
     remote = Remote()
     payload = remote.mute()
     return {"message": "TV muted", "payload": payload}
 
 
-@app.get("/unmute")
+@app.get("/volume/unmute")
 async def unmute():
     remote = Remote()
     payload = remote.mute(False)
     return {"message": "TV muted", "payload": payload}
 
 
-@app.get("/turnoff")
-async def turnoff():
+@app.get("/volume/")
+async def volume():
     remote = Remote()
-    payload = remote.turn_off()
-    return {"message": "TV closed", "payload": payload}
+    payload = remote.get_volume()
+    return {"message": "Volume Retrieved", "payload": payload}
+
+
+@app.get("/volume/up")
+async def volume_up():
+    remote = Remote()
+    payload = remote.volume_up()
+    return {"message": "Volume Retrieved", "payload": payload}
+
+
+@app.get("/volume/down")
+async def volume_down():
+    remote = Remote()
+    payload = remote.volume_down()
+    return {"message": "Volume Retrieved", "payload": payload}
+
+
+@app.get("/volume/set/{vol}")
+async def volume_set(vol: int):
+    remote = Remote()
+    payload = remote.set_volume(vol)
+    return {"message": "Volume Set", "payload": payload}
+
+# Channel Endpoints
 
 
 @app.get("/channels")
@@ -63,7 +95,10 @@ async def channels_down():
 async def channels_current():
     remote = Remote()
     payload = remote.get_current_channel()
-    return {"message": "Channels down", "payload": payload} 
+    return {"message": "Channels down", "payload": payload}
+
+
+# Application Endpoints
 
 @app.get("/apps")
 async def apps_list(sync: bool = False):

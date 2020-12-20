@@ -6,8 +6,19 @@ import time
 import yaml
 from pydantic import BaseModel
 from pywebostv.connection import WebOSClient
-from pywebostv.controls import ApplicationControl, MediaControl, SystemControl, TvControl
+from pywebostv.controls import ApplicationControl, MediaControl, SystemControl
+from pywebostv.controls import TvControl as Tv
 from tinydb import TinyDB, Query
+
+
+class TvControl(Tv):
+    """This class monkeypatches `TvControl` to add missing endpoints."""
+    COMMANDS = {
+        "channel_down": {"uri": "ssap://tv/channelDown"},
+        "channel_up": {"uri": "ssap://tv/channelUp"},
+        'channel_list': {'uri': 'ssap://tv/getChannelList'},
+        'get_current_channel': {'uri': 'ssap://tv/getCurrentChannel'}
+    }
 
 
 class RemoteConfig(BaseModel):
@@ -21,10 +32,9 @@ class Remote():
     def __init__(self, ip: Optional[str] = None):
         self.config_file: Path = Path().home() / ".tvremote" / "remote.yaml"
         self.config = RemoteConfig(**self._configure(ip))
-        self.client = WebOSClient(str(self.config.ip))
+        self.client = WebOSClient(ip or str(self.config.ip))
         self.channels: TinyDB = TinyDB(Path().home() / ".tvremote" / "channels.json")
-        self.apps: TinyDB = TinyDB(Path().home() / ".tvremote" / "apps.json") 
-
+        self.apps: TinyDB = TinyDB(Path().home() / ".tvremote" / "apps.json")
 
     def _connect(self, force_registration: bool = False):
         self.client.connect()
@@ -64,6 +74,26 @@ class Remote():
         media = MediaControl(self.client)
         return media.mute(mute)
 
+    def get_volume(self):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.get_volume()
+
+    def volume_up(self):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.volume_up()
+
+    def volume_down(self):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.volume_down()
+
+    def set_volume(self, vol: int):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.set_volume(vol)
+
     def turn_off(self):
         self._connect()
         system = SystemControl(self.client)
@@ -90,7 +120,7 @@ class Remote():
         self._connect()
         control = TvControl(self.client)
         return control.channel_up()
-    
+
     def get_current_channel(self):
         self._connect()
         control = TvControl(self.client)
