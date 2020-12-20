@@ -40,7 +40,35 @@ async def unmute():
     return {"message": "TV muted", "payload": payload}
 
 
+@app.get("/volume/")
+async def volume():
+    remote = Remote()
+    payload = remote.get_volume()
+    return {"message": "Volume Retrieved", "payload": payload}
+
+
+@app.get("/volume/up")
+async def volume_up():
+    remote = Remote()
+    payload = remote.volume_up()
+    return {"message": "Volume Retrieved", "payload": payload}
+
+
+@app.get("/volume/down")
+async def volume_down():
+    remote = Remote()
+    payload = remote.volume_down()
+    return {"message": "Volume Retrieved", "payload": payload}
+
+
+@app.get("/volume/set/{vol}")
+async def volume_set(vol: int):
+    remote = Remote()
+    payload = remote.set_volume(vol)
+    return {"message": "Volume Set", "payload": payload}
+
 # Channel Endpoints
+
 
 @app.get("/channels")
 async def channels_list(sync: bool = False):

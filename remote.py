@@ -63,6 +63,26 @@ class Remote():
         media = MediaControl(self.client)
         return media.mute(mute)
 
+    def get_volume(self):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.get_volume()
+
+    def volume_up(self):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.volume_up()
+
+    def volume_down(self):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.volume_down()
+
+    def set_volume(self, vol: int):
+        self._connect()
+        media = MediaControl(self.client)
+        return media.set_volume(vol)
+
     def turn_off(self):
         self._connect()
         system = SystemControl(self.client)
